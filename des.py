@@ -1,1 +1,1 @@
-print("git commit test")
+print("commit test")
