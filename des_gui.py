@@ -5,13 +5,24 @@ from tkinter import *
 from des import DesKey
 
 
-def encrypt():
-    encrypted_txt = ent_encrypt.get()
-    pass
+
+def encrypt_txt():
+    key = ent_choose_key.get().encode()
+    key = DesKey(key)
+    encrypted_txt = ent_encrypt.get().encode()
+    message = key.encrypt(encrypted_txt, padding=True)
+    encrypted_txt_lbl["text"] = f"{message}"
+    print(message)
 
 
-def decrypt():
-    pass
+def decrypt_txt():
+    key = ent_choose_key.get().encode()
+    key = DesKey(key)
+    decrypted_txt = ent_decrypt.get().encode()
+    message = key.decrypt(decrypted_txt, padding=True)
+    decrypted_txt_lbl["text"] = f"{message}"
+    print(message)
+
 
 
 root = Tk()
@@ -55,7 +66,7 @@ Key prompt widget
 # Label for prompting user for key
 choose_key_lbl = Label(
     root,
-    text="Choose a binary key:",
+    text="Choose a key of length 18, 16, or 24:",
     foreground="white",
     background="#3e3e3e",
     # bd="3",
@@ -76,7 +87,7 @@ Widget for encrypting string
 # Label for prompting user to enter a string
 choose_str_lbl = Label(
     root,
-    text="Choose a string to Encrypt:",
+    text="Enter a string to encrypt:",
     foreground="white",
     background="#3e3e3e",
     # bd="3",
@@ -94,7 +105,13 @@ ent_encrypt = Entry(
 encrypt_str_btn = Button(
     root,
     text="Encrypt",
-    command=encrypt
+    command=encrypt_txt
+)
+encrypted_txt_lbl = Label(
+    root,
+    text="",
+    foreground="white",
+    background="#3e3e3e"
 )
 
 """
@@ -103,38 +120,26 @@ Widget for decrypting string
 # label for display/prompting user the encrypted string
 decrypt_str_lbl = Label(
     root,
-    text="Encrypted String:",
+    text="Enter an encrypted string to decrypt:",
     foreground="white",
     background="#3e3e3e",
     # bd="3",
     # relief="solid"
 )
 # Entry field  for decrypting string
-ent_decrypt = Entry(root)
+ent_decrypt = Entry(root, text="enter")
 # Need a button for decrypting text [button 2]
 decrypt_str_btn = Button(
     root,
     text="Decrypt",
-    command=decrypt
+    command=decrypt_txt
 )
-
-"""
-Widget for displaying decrypted string
-"""
-# label for display/prompting user the decrypted string
-disp_decrypt_str_lbl = Label(
+decrypted_txt_lbl = Label(
     root,
-    text="Decrypted String: ",
+    text="",
     foreground="white",
-    background="#3e3e3e",
-    # bd="3",
-    # relief="solid"
+    background="#3e3e3e"
 )
-
-# Entry field for DISPLAYING decrypted string ONLY
-ent_display_decrypt = Entry(root)
-
-
 
 
 
@@ -149,19 +154,19 @@ Intro_desc.grid(row=1)
 # Prompt for key Label and Entry field
 choose_key_lbl.grid(row=2, column=0, pady=5)
 ent_choose_key.grid(row=3, column=0)
-# Encrypt label, entry field, and button
+# Encryption widget: label, entry field, button, and result label
 choose_str_lbl.grid(row=4, column=0, pady=10)
 ent_encrypt.grid(row=5, column=0, padx=10)
 encrypt_str_btn.grid(row=6, column=0, pady=10)
+encrypted_txt_lbl.grid(row=7, column=0, pady=10)
 
 # Decrypt label, entry field, and button
-decrypt_str_lbl.grid(row=7, column=0, pady=5)
-ent_decrypt.grid(row=8, column=0)
-decrypt_str_btn.grid(row=9, column=0, pady=10)
+decrypt_str_lbl.grid(row=8, column=0, pady=5)
+ent_decrypt.grid(row=9, column=0)
+decrypt_str_btn.grid(row=10, column=0, pady=10)
+decrypted_txt_lbl.grid(row=11, column=0, pady=10)
 
-# Display decrypted string label and entry field
-disp_decrypt_str_lbl.grid(row=12, column=0)
-ent_display_decrypt.grid(row=13, column=0, pady=10)
+
 
 
 
