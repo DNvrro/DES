@@ -10,7 +10,11 @@ def encrypt_txt():
     key = ent_choose_key.get().encode()
     key = DesKey(key)
     encrypted_txt = ent_encrypt.get().encode()
+    print(encrypted_txt)
     message = key.encrypt(encrypted_txt, padding=True)
+    message = str(message)
+    message = message[2:]
+    message = message[:len(message)-1]
     encrypted_txt_lbl["text"] = f"{message}"
     print(message)
 
@@ -18,7 +22,8 @@ def encrypt_txt():
 def decrypt_txt():
     key = ent_choose_key.get().encode()
     key = DesKey(key)
-    decrypted_txt = ent_decrypt.get().encode()
+    decrypted_txt = ent_decrypt.get()
+    print(decrypted_txt)
     message = key.decrypt(decrypted_txt, padding=True)
     decrypted_txt_lbl["text"] = f"{message}"
     print(message)
@@ -66,7 +71,7 @@ Key prompt widget
 # Label for prompting user for key
 choose_key_lbl = Label(
     root,
-    text="Choose a key of length 18, 16, or 24:",
+    text="Choose a key of length 8, 16, or 24:",
     foreground="white",
     background="#3e3e3e",
     # bd="3",
@@ -164,7 +169,7 @@ encrypted_txt_lbl.grid(row=7, column=0, pady=10)
 decrypt_str_lbl.grid(row=8, column=0, pady=5)
 ent_decrypt.grid(row=9, column=0)
 decrypt_str_btn.grid(row=10, column=0, pady=10)
-decrypted_txt_lbl.grid(row=11, column=0, pady=10)
+decrypted_txt_lbl.grid(row=11, column=0, pady=15)
 
 
 
