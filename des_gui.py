@@ -7,44 +7,66 @@ from des import DesKey
 
 
 def encrypt_txt():
-    key = ent_choose_key.get().encode()
-    key = DesKey(key)
-    encrypted_txt = ent_encrypt.get().encode()
-    print(encrypted_txt)
-    message = key.encrypt(encrypted_txt, padding=True)
-    message = str(message)
-    message = message[2:]
-    message = message[:len(message) - 1]
-    encrypted_txt_lbl["text"] = f"Encrypted String: {message}"
-    decrypt_str_btn = Button(
-        root,
-        text="Decrypt",
-        command=decrypt_txt
-    )
-    decrypt_str_btn.grid(row=10, column=0, pady=10)
-    print(message)
+
+    key = ent_choose_key.get()
+    print(len(key))
+    if len(key) == 8 or len(key) == 16 or len(key) == 24:
+        error_lbl['text'] = ''
+        key2 = key.encode()
+        print(f'key 2 is : {key2}')
+        key2 = DesKey(key2)
+        encrypted_txt = ent_encrypt.get().encode()
+        print(encrypted_txt)
+        message = key2.encrypt(encrypted_txt, padding=True)
+        message = str(message)
+        message = message[2:]
+        message = message[:len(message) - 1]
+        encrypted_txt_lbl["text"] = f"Encrypted String: {message}"
+        decrypt_str_btn = Button(
+            root,
+            text="Decrypt",
+            command=decrypt_txt
+        )
+        decrypt_str_btn.grid(row=10, column=0, pady=10)
+        print(message)
+
+
+    else:
+        error_lbl['text'] = 'PLEASE MAKE SURE YOUR KEY IS OF LENGTH 8, ' \
+                            '16, OR 24!'
 
 
 def decrypt_txt():
     key = ent_choose_key.get().encode()
-    key = DesKey(key)
-    decrypted_txt = ent_encrypt.get().encode()
-    decrypted_txt = key.encrypt(decrypted_txt, padding=True)
-    message = key.decrypt(decrypted_txt, padding=True)
-    message = str(message)
-    message = message[2:]
-    message = message[:len(message) - 1]
-    decrypted_txt_lbl["text"] = f"Decrypted String: {message}"
-    print(message)
+    if len(key) == 8 or len(key) == 16 or len(key) == 24:
+        error_lbl['text'] = ''
+        key2 = DesKey(key)
+        decrypted_txt = ent_encrypt.get().encode()
+        decrypted_txt = key2.encrypt(decrypted_txt, padding=True)
+        message = key2.decrypt(decrypted_txt, padding=True)
+        message = str(message)
+        message = message[2:]
+        message = message[:len(message) - 1]
+        decrypted_txt_lbl["text"] = f"Decrypted String: {message}"
+        print(message)
+    else:
+        error_lbl['text'] = 'PLEASE MAKE SURE YOUR KEY IS OF LENGTH 8, ' \
+                            '16, OR 24!'
+
+def reset_all():
+    ent_choose_key.delete(0, 'end')
+    ent_encrypt.delete(0, 'end')
+    error_lbl['text'] = ''
+    encrypted_txt_lbl['text'] = ''
+    decrypted_txt_lbl['text'] = ''
 
 
-Image_path = "/Users/danielnavarro/PycharmProjects/DES/des_gui_background.png"
 
 root = Tk()
 root.title("Welcome to the DES...")
 root.configure(background="#3e3e3e")
-image1 = tk.PhotoImage(file=Image_path)
-master_frame = Frame(master=root)
+
+
 # root.geometry('720x580')
 
 
@@ -55,7 +77,7 @@ myFont = font.Font(size=20)
 Intro_title = Label(
 
     root,
-    text="Welcome to our DES Project!",
+    text="Welcome to our DES Project!\n",
     foreground="white",  # Set the text color to white
     background="#3e3e3e"  # Set the background color to grayish
 )
@@ -65,13 +87,17 @@ Intro_title['font'] = myFont
 Intro_desc = Label(
 
     root,
-    text="Description of app and how to use it. Description of app "
-         "and how to use it. Description of app and how to use it.",
+    text="This project encrypts and decrypts a user defined message using the"
+         "Data Encryption Standard technique as discussed in CSEN 4340.\n\n"
+         "Simply enter a key string and type a message you would like to "
+         "encrypt. "
+         "When you are ready, click the encrypt button to see your "
+         "encrypted message.\n",
     foreground="white",
     background="#3e3e3e",
     # background="red",
     width="70",
-    wraplength="300"
+    wraplength="350"
 )
 
 """
@@ -145,6 +171,24 @@ decrypted_txt_lbl = Label(
     foreground="white",
     background="#3e3e3e"
 )
+"""
+Reset Button
+"""
+reset_btn = Button(
+    root,
+    text='Reset',
+    width=30,
+    command=reset_all
+)
+"""
+Error Label
+"""
+error_lbl = Label(
+    root,
+    text='',
+    foreground='red',
+    background='#3e3e3e'
+)
 
 """ 
 Positioning on screen 
@@ -164,6 +208,9 @@ encrypt_str_btn.grid(row=6, column=0, pady=10)
 encrypted_txt_lbl.grid(row=7, column=0, pady=10)
 
 # Positioning of the Decrypt button
-decrypted_txt_lbl.grid(row=11, column=0, pady=15)
-
+decrypted_txt_lbl.grid(row=11, column=0, pady=10)
+# Positioning of Error label
+error_lbl.grid(row=12, column=0, pady=10)
+# Positioning of Reset Button
+reset_btn.grid(row=13, column=0, pady=5)
 root.mainloop()
