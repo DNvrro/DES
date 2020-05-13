@@ -1,59 +1,92 @@
 # Description: 
 # Authors: Daniel Navarro, Nick Bishop
-import tkinter as tk
 import tkinter.font as font
 from tkinter import *
 from des import DesKey
 
 
 def encrypt_txt():
+    """
+    Function to retrieve user inputted text and convert it to an encrypted
+    string of bytes.
 
-    key = ent_choose_key.get()
+    - Function also instantiates the decrypt button & positions it to the
+    window
+    """
+
+    key = ent_choose_key.get()  # Get key from user
     print(len(key))
+    # Check to see if key is of valid length
     if len(key) == 8 or len(key) == 16 or len(key) == 24:
+        # Clear error label if condition is met
         error_lbl['text'] = ''
+        # Convert key to bytes
         key2 = key.encode()
-        print(f'key 2 is : {key2}')
-        key2 = DesKey(key2)
+
+        key2 = DesKey(key2)  # Create DesKey() object using user key
+        # Get user message from entry field
         encrypted_txt = ent_encrypt.get().encode()
-        print(encrypted_txt)
+        # Encrypt user inputted message
         message = key2.encrypt(encrypted_txt, padding=True)
         message = str(message)
+        # Trim the byte format from the message
         message = message[2:]
         message = message[:len(message) - 1]
+        # Display encrypted sting in encrypted string label
         encrypted_txt_lbl["text"] = f"Encrypted String: {message}"
+        # Define the Decrypt button
         decrypt_str_btn = Button(
             root,
             text="Decrypt",
             command=decrypt_txt
         )
+        # Add Decrypt button to window
         decrypt_str_btn.grid(row=10, column=0, pady=10)
         print(message)
-
-
+    # If the condition is not met, prompt the user with an error message
+    # asking them to adjust the length of their key
     else:
         error_lbl['text'] = 'PLEASE MAKE SURE YOUR KEY IS OF LENGTH 8, ' \
                             '16, OR 24!'
 
 
 def decrypt_txt():
-    key = ent_choose_key.get().encode()
+    """
+    This function decrypts the text that was previously encrypted by first
+    encrypting it again and then calling decrypt() to decrypt and display the
+    decrypted text to the decrypt_txt_lb()
+    """
+
+    key = ent_choose_key.get()  # Get key from the user
+    # Check to see if the key is of valid length
     if len(key) == 8 or len(key) == 16 or len(key) == 24:
+        # Clear error label is condition is mer
         error_lbl['text'] = ''
-        key2 = DesKey(key)
+        # Convert the key from a string to a bytes format
+        key2 = key.encode()
+        # Create DesKey() instance
+        key2 = DesKey(key2)
+        # Encrypt message
         decrypted_txt = ent_encrypt.get().encode()
         decrypted_txt = key2.encrypt(decrypted_txt, padding=True)
+        # Decrypt message
         message = key2.decrypt(decrypted_txt, padding=True)
         message = str(message)
         message = message[2:]
         message = message[:len(message) - 1]
+        # Pass the message to the label to display to user
         decrypted_txt_lbl["text"] = f"Decrypted String: {message}"
         print(message)
     else:
         error_lbl['text'] = 'PLEASE MAKE SURE YOUR KEY IS OF LENGTH 8, ' \
                             '16, OR 24!'
 
+
 def reset_all():
+    """
+    This function resets and clears all labels and entries
+
+    """
     ent_choose_key.delete(0, 'end')
     ent_encrypt.delete(0, 'end')
     error_lbl['text'] = ''
@@ -61,11 +94,9 @@ def reset_all():
     decrypted_txt_lbl['text'] = ''
 
 
-
 root = Tk()
 root.title("Welcome to the DES...")
 root.configure(background="#3e3e3e")
-
 
 # root.geometry('720x580')
 
